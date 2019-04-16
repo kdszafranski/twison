@@ -30,15 +30,9 @@ var Twison = {
     if (links) {
       return links.map(function(link) {
         var name = link.match(/\(\((.*?)\-\&gt;(.*?)\)\)/);
-
-        // return name;
-
-        if (name) {
-          // ((npcName->"Value value"))
-          // console.log(differntName);
-          
+        if (name) {          
           return {
-            npcName: name[2],
+            [name[1]]: name[2],
           };
         } else {
           return;
@@ -57,9 +51,9 @@ var Twison = {
     }
 
     // pull out NPC info from this passage
-    var npcInfo = Twison.extractNPCNameFromText(dict.text);
-    if(npcInfo) {
-      dict.npcInfo = npcInfo;
+    var eventDetails = Twison.extractNPCNameFromText(dict.text);
+    if(eventDetails) {
+      dict.eventDetails = eventDetails;
     }
 
     ["name", "pid", "position", "tags"].forEach(function(attr) {
