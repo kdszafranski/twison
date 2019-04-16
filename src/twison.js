@@ -22,12 +22,44 @@ var Twison = {
     }
   },
 
+  extractNPCNameFromText: function(text) {
+    var links = text.match(/\(\(.+?\)\)/g);
+                           
+    // var pattern = new RegExp('/\(\((.*?)\-\&gt;(.*?)\)\)' ); 
+
+    if (links) {
+      return links.map(function(link) {
+        var name = link.match(/\(\((.*?)\-\&gt;(.*?)\)\)/);
+
+        // return name;
+
+        if (name) {
+          // ((npcName->"Value value"))
+          // console.log(differntName);
+          
+          return {
+            npcName: name[2],
+          };
+        } else {
+          return;
+        }
+      });
+    }
+  },
+
   convertPassage: function(passage) {
   	var dict = {text: passage.innerHTML};
 
+    // handle passage links
     var links = Twison.extractLinksFromText(dict.text);
     if (links) {
       dict.links = links;
+    }
+
+    // pull out NPC info from this passage
+    var npcInfo = Twison.extractNPCNameFromText(dict.text);
+    if(npcInfo) {
+      dict.npcInfo = npcInfo;
     }
 
     ["name", "pid", "position", "tags"].forEach(function(attr) {

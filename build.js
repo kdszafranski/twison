@@ -3,7 +3,12 @@ var Uglify = require('uglify-js')
 
 var package = JSON.parse(fs.readFileSync("package.json", "utf-8"))
 var html = fs.readFileSync("src/storyFormat.html", "utf-8")
-var js = Uglify.minify("src/twison.js")
+var js = Uglify.minify("src/twison.js",
+  {
+    mangle: false,
+    mangleProperties: false,
+  }
+);
 
 html = html.replace("{{SCRIPT}}", js.code)
 
