@@ -1,18 +1,19 @@
 var Twison = {
-  extractLinksFromText: function(text) {
+  extractLinksFromText: function (text) {
     var links = text.match(/\[\[.+?\]\]/g)
     if (links) {
-      return links.map(function(link) {
+      return links.map(function (link) {
         var differentName = link.match(/\[\[(.*?)\-\&gt;(.*?)\]\]/);
         if (differentName) {
           // [[name->link]]
+          // return differentName;
           return {
             name: differentName[1],
             link: differentName[2]
           };
         } else {
           // [[link]]
-          link = link.substring(2, link.length-2)
+          link = link.substring(2, link.length - 2)
           return {
             name: link,
             link: link
@@ -22,27 +23,29 @@ var Twison = {
     }
   },
 
-  extractNPCNameFromText: function(text) {
-    var links = text.match(/\(\(.+?\)\)/g);
-                           
-    // var pattern = new RegExp('/\(\((.*?)\-\&gt;(.*?)\)\)' ); 
+  extractEventDetails: function (text) {
+    var details = text.match(/\(\(.+?\)\)/g);
 
-    if (links) {
-      return links.map(function(link) {
-        var name = link.match(/\(\((.*?)\-\&gt;(.*?)\)\)/);
-        if (name) {          
-          return {
-            [name[1]]: name[2],
-          };
-        } else {
-          return;
+    // details is an array
+    if (details) {
+      // results object
+      var output = {};
+      // add each tag found and add it to our output object as a key/value pair
+      for (detail of details) {
+        var chunks = detail.match(/\(\((.*?)\-\&gt;(.*?)\)\)/);
+        // name is an array of string parts
+        if (chunks) {
+          output[chunks[1]] = chunks[2];
         }
-      });
+      }
+
+      // return output as one object with properties
+      return output;
     }
   },
 
-  convertPassage: function(passage) {
-  	var dict = {text: passage.innerHTML};
+  convertPassage: function (passage) {
+    var dict = { text: passage.innerHTML };
 
     // handle passage links
     var links = Twison.extractLinksFromText(dict.text);
@@ -50,20 +53,21 @@ var Twison = {
       dict.links = links;
     }
 
-    // pull out NPC info from this passage
-    var eventDetails = Twison.extractNPCNameFromText(dict.text);
-    if(eventDetails) {
+    // pull out scenario info from this passage
+    var eventDetails = Twison.extractEventDetails(dict.text);
+    if (eventDetails) {
       dict.eventDetails = eventDetails;
     }
 
-    ["name", "pid", "position", "tags"].forEach(function(attr) {
+    // loop thru passage parts and gi
+    ["name", "pid", "position", "tags"].forEach(function (attr) {
       var value = passage.attributes[attr].value;
       if (value) {
         dict[attr] = value;
       }
     });
 
-    if(dict.position) {
+    if (dict.position) {
       var position = dict.position.split(',')
       dict.position = {
         x: position[0],
@@ -76,17 +80,19 @@ var Twison = {
     }
 
     return dict;
-	},
+  },
 
-  convertStory: function(story) {
+  convertStory: function (story) {
     var passages = story.getElementsByTagName("tw-passagedata");
     var convertedPassages = Array.prototype.slice.call(passages).map(Twison.convertPassage);
 
+    // main passages converted
     var dict = {
       passages: convertedPassages
     };
 
-    ["name", "startnode", "creator", "creator-version", "ifid"].forEach(function(attr) {
+    // global story info converted
+    ["name", "startnode", "creator", "creator-version", "ifid"].forEach(function (attr) {
       var value = story.attributes[attr].value;
       if (value) {
         dict[attr] = value;
@@ -95,13 +101,13 @@ var Twison = {
 
     // Add PIDs to links
     var pidsByName = {};
-    dict.passages.forEach(function(passage) {
+    dict.passages.forEach(function (passage) {
       pidsByName[passage.name] = passage.pid;
     });
-
-    dict.passages.forEach(function(passage) {
+    // Search thru all other passages for matching pid to each link
+    dict.passages.forEach(function (passage) {
       if (!passage.links) return;
-      passage.links.forEach(function(link) {
+      passage.links.forEach(function (link) {
         link.pid = pidsByName[link.link];
         if (!link.pid) {
           link.broken = true;
@@ -112,7 +118,7 @@ var Twison = {
     return dict;
   },
 
-  convert: function() {
+  convert: function () {
     var storyData = document.getElementsByTagName("tw-storydata")[0];
     var json = JSON.stringify(Twison.convertStory(storyData), null, 2);
     document.getElementById("output").innerHTML = json;
