@@ -1,0 +1,429 @@
+{
+    "passages": [{
+            "text": "July 20th, 1951, Higgins, OK, USA.\n\nA meteor shower of unprecented scale has sent thousands of objects hurtling through the atmostphere. The sky above Higgins is ablaze with streaks of ochre and white.\n\nCitizens are alarmed and amazed. Many spend a sleepless night gazing into the heavens with wonder and awe...\n\n[[Begin->Opening]] ",
+            "links": [{
+                "name": "Begin",
+                "link": "Opening",
+                "pid": "2"
+            }],
+            "name": "Overview",
+            "pid": "1",
+            "position": {
+                "x": "51",
+                "y": "27"
+            }
+        },
+        {
+            "text": "City Hall\n\nOf the many reports of meteor landings from last night's shower, one in particular stands out.\n\nFarmer Harlson, whose farm is southeast of town, has reported the largest speciman by far. Some folks from the University went out this morning see it and collect some samples.\n\n\n((npcName->Edwin Honeycut))\n((location->Harlson's Farm))\n\n[[Keep me posted.->First Recovery Phase]]\n\n(set: $actionPoints to 5)\n(set: $investigatorOnSite to false)\n(set: $hasRelic to false)\n(set: $availableInvestigators to 1)\n\n(set: $researchBonus to 0)\n(set: $tacticsLevel to 1)\n(set: $scienceLevel to 1)\n(set: $defense to 1)\n(set: $power to 1)",
+            "links": [{
+                "name": "Keep me posted.",
+                "link": "First Recovery Phase",
+                "pid": "4"
+            }],
+            "eventDetails": {
+                "npcName": "Edwin Honeycut",
+                "location": "Harlson's Farm"
+            },
+            "name": "Opening",
+            "pid": "2",
+            "position": {
+                "x": "301",
+                "y": "27"
+            }
+        },
+        {
+            "text": "Scientists discover strange properties which they want to further research back at the University. For this they will have to move the Meteor into the city.\n\nAttempting to move the Meteor activates it and calls the Monster.\n\n(set: $actionPoints = 0)\n\n[[Attack!->First Attack Phase]]",
+            "links": [{
+                "name": "Attack!",
+                "link": "First Attack Phase",
+                "pid": "6"
+            }],
+            "name": "Move Object to University",
+            "pid": "3",
+            "position": {
+                "x": "600",
+                "y": "201"
+            },
+            "tags": [
+                "StoryPoint"
+            ]
+        },
+        {
+            "text": "During this time the player may:\n\n- look around, click on buildings\n- build things?\n\nActionPoints: $actionPoints\n\nEvents Occur in this order:\n\n1. [[Research On Site->Research On Site]]\n2. [[Press: Weather->Headline: Early Autumn?]]\n3. [[Trespassers->Trespassers]]\n4. [[Initial Findings->Initial Findings]]\n\nOptional City Actions\n\n- [[Build Something->Build Something]]\n\n(if: $actionPoints <= 0) [\n5. [[Trigger Attack->Move Object to University]]\n]",
+            "links": [{
+                    "name": "Research On Site",
+                    "link": "Research On Site",
+                    "pid": "21"
+                },
+                {
+                    "name": "Press: Weather",
+                    "link": "Headline: Early Autumn?",
+                    "pid": "5"
+                },
+                {
+                    "name": "Trespassers",
+                    "link": "Trespassers",
+                    "pid": "18"
+                },
+                {
+                    "name": "Initial Findings",
+                    "link": "Initial Findings",
+                    "pid": "20"
+                },
+                {
+                    "name": "Build Something",
+                    "link": "Build Something",
+                    "pid": "22"
+                },
+                {
+                    "name": "Trigger Attack",
+                    "link": "Move Object to University",
+                    "pid": "3"
+                }
+            ],
+            "name": "First Recovery Phase",
+            "pid": "4",
+            "position": {
+                "x": "300",
+                "y": "201"
+            },
+            "tags": [
+                "RecoveryPhase"
+            ]
+        },
+        {
+            "text": "Press notes the weather is doing strange things. The temperature around Higgins has decline steadily from a swelteringly normal 90-degrees to a downright fallish 65 over the past several days.\n\n(set: $actionPoints to $actionPoints - 1)\n\n[[No Decision->First Recovery Phase]] ",
+            "links": [{
+                "name": "No Decision",
+                "link": "First Recovery Phase",
+                "pid": "4"
+            }],
+            "name": "Headline: Early Autumn?",
+            "pid": "5",
+            "position": {
+                "x": "94",
+                "y": "379"
+            },
+            "tags": [
+                "Press"
+            ]
+        },
+        {
+            "text": "The Monster attacks starting at Harlson's Farm.\n\nEvents: \n\n1. JIT win condition\n\n$didInvestigate[Your Scientists discover that the Relic is senstive to various harmonic frequencies. One of these frequencies banishes the creature. The Relic is safe but the Scientists have no idea which frequency caused the Monster to leave. It seems there is a direct linkage between the Relic and the Monster...\n(set: $hasRelic to true)]\n\n(else:)[The US Army intervenes, using arms to scare the monster away. The Relic is destroyed.(set: $hasRelic to false)]\n\n[[Continue->First Full Recovery Phase]]",
+            "links": [{
+                "name": "Continue",
+                "link": "First Full Recovery Phase",
+                "pid": "7"
+            }],
+            "name": "First Attack Phase",
+            "pid": "6",
+            "position": {
+                "x": "800",
+                "y": "201"
+            },
+            "tags": [
+                "AttackPhase"
+            ]
+        },
+        {
+            "text": "(if: (history:) contains \"First Full Recovery Phase\" is false) [ \n(set: $actionPoints to 25 + $bonusActionPoints)\n  $hasRelic[\n\t  (set: $actionPoints to $actionPoints - 4)\n\t  (set: $researchBonus to $researchBonus + 15)\n  ]\n  The Monster is gone and your town is a mass of burning rubble. Everybody needs something from you and all you can think is: WTF just happended?!\n]\n(else:)[ You've been here before! ]\n\n$didInvestigate[\nYour Scientists continue to run tests on the Relic. You fear that fiddling with it further may recall the Monster. Something in your gut tells you this isn't over yet...\n]\n(else:)[The Army General informs you their temporary base will not be going away anytime soon. They are bringing in \"Top People\" to further investigate what just happened here today.]\n\n''You have $actionPoints Action Points to spend.''\n\n(if: $actionPoints > 0)[\n''Events''\n\n1. [[Press: What Just Happened?->Headline: What Just Happened?]]\n2. [[Advisor: set up research area on monster site->Research Area]]\n3. [[Advisor: Not enough man-power->More Manpower]]\n4. [[Advisor: Strange Findings at the research site->Strange Findings]]\n\n''Quests (meet NPCs)''\n$didInvestigate[* Set up Federal Liason]\n* [[Upgrade Hospital->Upgrade Hospital]]\n* [[Build another Firehouse->Build Firehouse]]\n* [[Organize Civil Defense Service->Civil Defense]]\n* [[Research Tactics->Research Tactics]]\n* [[Research Science->Research Science]]\n\n''Clues (meet NPCs)''\n1. NPC: Shadowy figure seen fleeing the research site (occurs at 6 AP)\n\nHindrances\nRepair is a must, but slow and inefficient (Repair speed -25%)\nFeds want to cover it up (Fed Base.Independence + 50%)\n]\n(else:)[\n\t[[Begin Second Attack Phase->Second Attack Phase]]\n]",
+            "links": [{
+                    "name": "Press: What Just Happened?",
+                    "link": "Headline: What Just Happened?",
+                    "pid": "8"
+                },
+                {
+                    "name": "Advisor: set up research area on monster site",
+                    "link": "Research Area",
+                    "pid": "9"
+                },
+                {
+                    "name": "Advisor: Not enough man-power",
+                    "link": "More Manpower",
+                    "pid": "17"
+                },
+                {
+                    "name": "Advisor: Strange Findings at the research site",
+                    "link": "Strange Findings",
+                    "pid": "11"
+                },
+                {
+                    "name": "Upgrade Hospital",
+                    "link": "Upgrade Hospital",
+                    "pid": "12"
+                },
+                {
+                    "name": "Build another Firehouse",
+                    "link": "Build Firehouse",
+                    "pid": "13"
+                },
+                {
+                    "name": "Organize Civil Defense Service",
+                    "link": "Civil Defense",
+                    "pid": "14"
+                },
+                {
+                    "name": "Research Tactics",
+                    "link": "Research Tactics",
+                    "pid": "15"
+                },
+                {
+                    "name": "Research Science",
+                    "link": "Research Science",
+                    "pid": "16"
+                },
+                {
+                    "name": "Begin Second Attack Phase",
+                    "link": "Second Attack Phase",
+                    "pid": "10"
+                }
+            ],
+            "name": "First Full Recovery Phase",
+            "pid": "7",
+            "position": {
+                "x": "951",
+                "y": "200"
+            },
+            "tags": [
+                "RecoveryPhase"
+            ]
+        },
+        {
+            "text": "<h2>What Just Happened?</h2>\nby Charlie Clearwater\n\n$hasRelic[Thank heavens our Mayor acted so quickly! If it were not for his quick and decisive action our entire city would have been wiped off the face of the Earth!]\n(else:)[Thank heavens the Army showed up to save us all! Once again our brave and selfless soldiers rush in to defend the weak and defenseless.]\n\n[[No Decision->First Full Recovery Phase]]\n\n(if: (history:) contains \"What Just Happened?\") [\n\tYou've been here before.\n] (else:) [\n\t(set: $actionPoints to $actionPoints - 1)\n]",
+            "links": [{
+                "name": "No Decision",
+                "link": "First Full Recovery Phase",
+                "pid": "7"
+            }],
+            "name": "Headline: What Just Happened?",
+            "pid": "8",
+            "position": {
+                "x": "1365",
+                "y": "241"
+            },
+            "tags": [
+                "Press"
+            ]
+        },
+        {
+            "text": "Science Advisor:\n\n$hasRelic[We should not only continue researching the Relic itself, we need to get back out to the field and scour the countryside for more. It's possible this isn't the only one around!]\n(else:)[With the Relic gone, we should make sure there aren't anymore. Let's set up a base on in the countryside and continue our search!]\n\nDecision\n* [[Good idea, let's do it->First Full Recovery Phase]] \n* [[No, we can't spare a body right now!->First Full Recovery Phase]] \n\n\n(if: (history:) contains \"Research Area\") [\n\tYou've been here before.\n] (else:) [\n\t(set: $actionPoints to $actionPoints - 1)\n]",
+            "links": [{
+                    "name": "Good idea, let's do it",
+                    "link": "First Full Recovery Phase",
+                    "pid": "7"
+                },
+                {
+                    "name": "No, we can't spare a body right now!",
+                    "link": "First Full Recovery Phase",
+                    "pid": "7"
+                }
+            ],
+            "name": "Research Area",
+            "pid": "9",
+            "position": {
+                "x": "839",
+                "y": "505"
+            },
+            "tags": [
+                "Advisor"
+            ]
+        },
+        {
+            "text": "Monster Attacks!",
+            "name": "Second Attack Phase",
+            "pid": "10",
+            "position": {
+                "x": "1147",
+                "y": "50"
+            },
+            "tags": [
+                "AttackPhase"
+            ]
+        },
+        {
+            "text": "Sir, the latest news from the Scientists at the Research site is beyond imagination. The samples we've been able to take from the Relic itself have finally been dated with the latest techniques.\n\nI'm staggered to report, sir, that the Relic appears to be old. Not just old, ancient. Ancient in the stictest sense of the word.\n\nThe ancient civilizations of Mesopotamia and the Far East are as yesterday's news compared to the vast, hidden epoch from which this stone was planted upon this earth.\n\n[[No Decision->First Full Recovery Phase]]\n\n(if: (history:) contains \"Strange Findings\") [\n\tYou've been here before.\n] (else:) [\n\t(set: $actionPoints to 0)\n]",
+            "links": [{
+                "name": "No Decision",
+                "link": "First Full Recovery Phase",
+                "pid": "7"
+            }],
+            "name": "Strange Findings",
+            "pid": "11",
+            "position": {
+                "x": "1273",
+                "y": "126"
+            },
+            "tags": [
+                "Advisor"
+            ]
+        },
+        {
+            "text": "Double-click this passage to edit it.",
+            "name": "Upgrade Hospital",
+            "pid": "12",
+            "position": {
+                "x": "1020",
+                "y": "508"
+            }
+        },
+        {
+            "text": "Double-click this passage to edit it.",
+            "name": "Build Firehouse",
+            "pid": "13",
+            "position": {
+                "x": "917",
+                "y": "617"
+            }
+        },
+        {
+            "text": "Double-click this passage to edit it.",
+            "name": "Civil Defense",
+            "pid": "14",
+            "position": {
+                "x": "1140",
+                "y": "543"
+            },
+            "tags": [
+                "Advisor"
+            ]
+        },
+        {
+            "text": "Double-click this passage to edit it.",
+            "name": "Research Tactics",
+            "pid": "15",
+            "position": {
+                "x": "1260",
+                "y": "534"
+            }
+        },
+        {
+            "text": "Double-click this passage to edit it.",
+            "name": "Research Science",
+            "pid": "16",
+            "position": {
+                "x": "1410",
+                "y": "368"
+            }
+        },
+        {
+            "text": "Police Chief:\n\nI need more manpower! I can't be expected to keep the streets safe AND clean up this mess with the meager crew I have at my disposal.\n\n[[Yes->First Full Recovery Phase]] \n[[No->First Full Recovery Phase]]",
+            "links": [{
+                    "name": "Yes",
+                    "link": "First Full Recovery Phase",
+                    "pid": "7"
+                },
+                {
+                    "name": "No",
+                    "link": "First Full Recovery Phase",
+                    "pid": "7"
+                }
+            ],
+            "name": "More Manpower",
+            "pid": "17",
+            "position": {
+                "x": "1292",
+                "y": "425"
+            },
+            "tags": [
+                "Advisor"
+            ]
+        },
+        {
+            "text": "Farmer Harlson complains about dying crops and strangers on his property. \n\nSays his dog \"got one'of'em by the keister.\"\n\nHe's turned over the torn clothing to the Police. \n\n\"Next time he'll git a taste o' the John Wayne. I won't be havin' no more strangers on my land. What with them nosy eggheads and the weather it's wonder I've got any crop left standin'\"\n\nDecision\n\nWe have enough Investigators to send one to the scene in case trespassers return to cause trouble. \n\nIf we send one out to the Farm, we won't have any others until they're done out there. This will take 5 turns.\n\n\n[[Send a Police Detective to the scene->Send Police]]\n[[Not at this time->First Recovery Phase]]",
+            "links": [{
+                    "name": "Send a Police Detective to the scene",
+                    "link": "Send Police",
+                    "pid": "19"
+                },
+                {
+                    "name": "Not at this time",
+                    "link": "First Recovery Phase",
+                    "pid": "4"
+                }
+            ],
+            "name": "Trespassers",
+            "pid": "18",
+            "position": {
+                "x": "209",
+                "y": "464"
+            },
+            "tags": [
+                "Event"
+            ]
+        },
+        {
+            "text": "- Move Investigator to Farm location\n- Reduce number of Investigators by 1\n\n(set: $investigatorOnSite to true)\n(set: $availableInvestigators to $availableInvestigators - 1)\n\n[[Back->First Recovery Phase]] ",
+            "links": [{
+                "name": "Back",
+                "link": "First Recovery Phase",
+                "pid": "4"
+            }],
+            "name": "Send Police",
+            "pid": "19",
+            "position": {
+                "x": "335",
+                "y": "568"
+            },
+            "tags": [
+                "Code"
+            ]
+        },
+        {
+            "text": "The initial findings from the University researchers on site continue to reveal fascinating data regarding our extra-stellar visitor.\n\nIt is made of a wholly unique material, heretofor unseen on Earth. It also appears to be roughly symmetrical and testing suggests it may be hollow inside. Up to this point no drill employed has been able to get deep enough to get a sample.\n\nThe University is making arrangements to move the meteor to a building on campus.\n\n(set: $actionPoints to $actionPoints - 2)\n\n[[Back->First Recovery Phase]] ",
+            "links": [{
+                "name": "Back",
+                "link": "First Recovery Phase",
+                "pid": "4"
+            }],
+            "name": "Initial Findings",
+            "pid": "20",
+            "position": {
+                "x": "420",
+                "y": "448"
+            }
+        },
+        {
+            "text": "The University scientists would like to set up a small research base on the site at Harlson's Farm. The meteor is too large to move on short notice.\n\nTheir initial findings will be ready in 2 turns.\n\n(set: $actionPoints to $actionPoints - 1)\n\n[[Back->First Recovery Phase]] \n\n((npcName->Edwin Honeycut))\n((location->Harlson's Farm))\n((display->true))\n((time->10))",
+            "links": [{
+                "name": "Back",
+                "link": "First Recovery Phase",
+                "pid": "4"
+            }],
+            "eventDetails": {
+                "npcName": "Edwin Honeycut",
+                "location": "Harlson's Farm",
+                "display": "true",
+                "time": "10"
+            },
+            "name": "Research On Site",
+            "pid": "21",
+            "position": {
+                "x": "111",
+                "y": "214"
+            },
+            "tags": [
+                "Code",
+                "Event"
+            ]
+        },
+        {
+            "text": "You build something useful in the City.\n\n(set: $actionPoints to $actionPoints - 1)\n\n[[Back->First Recovery Phase]]",
+            "links": [{
+                "name": "Back",
+                "link": "First Recovery Phase",
+                "pid": "4"
+            }],
+            "name": "Build Something",
+            "pid": "22",
+            "position": {
+                "x": "459",
+                "y": "325"
+            }
+        }
+    ],
+    "name": "On The Edge of the Abyss",
+    "startnode": "1",
+    "creator": "Twine",
+    "creator-version": "2.2.1",
+    "ifid": "9ADA8320-F113-4411-90B0-D49D951C8DD0"
+}
