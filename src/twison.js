@@ -59,6 +59,14 @@ var Twison = {
       dict.eventDetails = eventDetails;
     }
 
+    // process text
+    // story text only
+    /*
+    This is a one-off, displayed event.\n\n\n((display->true))\n((locationName->CityHall))\n((npcName->Edwin Honeycut))\n((actionPointCost->1))\n((triggerTime->10))
+    */
+    var parts = dict.text.split("\n\n");
+    dict.text = parts[0];
+
     // extract these tags from the passage data
     ["name", "pid", "position", "tags"].forEach(function (attr) {
       var value = passage.attributes[attr].value;
