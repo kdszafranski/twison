@@ -59,7 +59,7 @@ var Twison = {
       dict.eventDetails = eventDetails;
     }
 
-    // loop thru passage parts and gi
+    // extract these tags from the passage data
     ["name", "pid", "position", "tags"].forEach(function (attr) {
       var value = passage.attributes[attr].value;
       if (value) {
@@ -84,14 +84,14 @@ var Twison = {
 
   convertStory: function (story) {
     var passages = story.getElementsByTagName("tw-passagedata");
+    // convert each passage
     var convertedPassages = Array.prototype.slice.call(passages).map(Twison.convertPassage);
 
-    // main passages converted
     var dict = {
       passages: convertedPassages
     };
 
-    // global story info converted
+    // extract global story info 
     ["name", "startnode", "creator", "creator-version", "ifid"].forEach(function (attr) {
       var value = story.attributes[attr].value;
       if (value) {
@@ -118,6 +118,7 @@ var Twison = {
     return dict;
   },
 
+  // entry point, called from built.js
   convert: function () {
     var storyData = document.getElementsByTagName("tw-storydata")[0];
     var json = JSON.stringify(Twison.convertStory(storyData), null, 2);
