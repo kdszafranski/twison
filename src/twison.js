@@ -126,7 +126,7 @@ var Twison = {
     return dict;
   },
 
-  // entry point, called from built.js
+  // entry point, called from build.js
   convert: function () {
     var storyData = document.getElementsByTagName("tw-storydata")[0];
     var json = JSON.stringify(Twison.convertStory(storyData), null, 2);
